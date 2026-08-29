@@ -192,7 +192,7 @@ export async function toggleAgentStatus(agentId: string, status: string) {
 export function getStoredNotificationSettings(): NotificationSettings {
   if (typeof window === 'undefined') {
     return {
-      whatsapp: { enabled: true, apiUrl: 'https://kaowhat.com/api/v1/send', apiKey: 'kw_key_demo123', targetNumber: '082129745115' },
+      whatsapp: { enabled: true, apiUrl: 'https://kaowhat.com/api/v1/send', apiKey: 'kw_key_co2eivrwAhH4gjzU28nutBf1lWO3LXG7A0vrLiYL', targetNumber: '082129745115' },
       sms: { enabled: false, apiUrl: 'https://sms-gateway.example.com/api/send', apiKey: '', senderId: 'CTARTECH' },
       email: { enabled: true, smtpHost: 'smtp.gmail.com', smtpPort: 587, smtpUser: 'admin@ctar.tech', smtpPass: '••••••••', adminEmail: 'ciso@ctar.tech' },
     };
@@ -202,7 +202,7 @@ export function getStoredNotificationSettings(): NotificationSettings {
     try { return JSON.parse(stored); } catch (e) {}
   }
   return {
-    whatsapp: { enabled: true, apiUrl: 'https://kaowhat.com/api/v1/send', apiKey: 'kw_key_demo123', targetNumber: '082129745115' },
+    whatsapp: { enabled: true, apiUrl: 'https://kaowhat.com/api/v1/send', apiKey: 'kw_key_co2eivrwAhH4gjzU28nutBf1lWO3LXG7A0vrLiYL', targetNumber: '082129745115' },
     sms: { enabled: false, apiUrl: 'https://sms-gateway.example.com/api/send', apiKey: '', senderId: 'CTARTECH' },
     email: { enabled: true, smtpHost: 'smtp.gmail.com', smtpPort: 587, smtpUser: 'admin@ctar.tech', smtpPass: '••••••••', adminEmail: 'ciso@ctar.tech' },
   };

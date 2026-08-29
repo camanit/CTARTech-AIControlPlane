@@ -21,6 +21,7 @@ export default function NotificationsPage() {
   const [settings, setSettings] = useState<NotificationSettings>(getStoredNotificationSettings());
   const [savedSuccess, setSavedSuccess] = useState(false);
   const [testResult, setTestResult] = useState<{ type: string; msg: string; status: 'SUCCESS' | 'ERROR' } | null>(null);
+  const [sendingWa, setSendingWa] = useState(false);
 
   useEffect(() => {
     setSettings(getStoredNotificationSettings());
@@ -33,12 +34,50 @@ export default function NotificationsPage() {
     setTimeout(() => setSavedSuccess(false), 2500);
   };
 
-  const handleTestWhatsApp = () => {
-    setTestResult({
-      type: 'WhatsApp',
-      msg: `[SIMULASI] Notifikasi terkirim ke WhatsApp ${settings.whatsapp.targetNumber}: "🚨 AI Agent Security Alert: agent_finance_01 membutuhkan persetujuan CISO!"`,
-      status: 'SUCCESS',
-    });
+  const handleTestWhatsApp = async () => {
+    setSendingWa(true);
+    setTestResult(null);
+    try {
+      const url = settings.whatsapp.apiUrl.trim() || 'https://kaowhat.com/api/v1/send';
+      const token = settings.whatsapp.apiKey.trim();
+      const phone = settings.whatsapp.targetNumber.trim();
+
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          phone: phone,
+          message: `🚨 *CTARTech-AIControlPlane: TEST ALERT*\n\n✅ KONEKSI REAL WHATSAPP GATEWAY BERHASIL!\n\nPeringatan instan runtime AI Agent aktif mendeteksi transaksi dan wewenang berisiko tinggi.\n\n• Penerima: ${phone}\n• Gateway: kaowhat.com\n• Waktu: ${new Date().toLocaleString('id-ID')}`,
+        }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.success !== false) {
+        setTestResult({
+          type: 'WhatsApp',
+          msg: `✅ NOTIFIKASI NYATA BERHASIL TERKIRIM ke nomor WhatsApp ${phone}! Silakan periksa pesan masuk di aplikasi WhatsApp Anda via kaowhat.com.`,
+          status: 'SUCCESS',
+        });
+      } else {
+        setTestResult({
+          type: 'WhatsApp',
+          msg: `❌ Gagal mengirim via kaowhat.com: ${data.message || res.statusText || 'Respon ditolak'}`,
+          status: 'ERROR',
+        });
+      }
+    } catch (err: any) {
+      setTestResult({
+        type: 'WhatsApp',
+        msg: `❌ Terjadi kesalahan pengiriman: ${err.message}`,
+        status: 'ERROR',
+      });
+    } finally {
+      setSendingWa(false);
+    }
   };
 
   const handleTestSms = () => {
@@ -171,10 +210,11 @@ export default function NotificationsPage() {
                   <button
                     type="button"
                     onClick={handleTestWhatsApp}
-                    className="px-4 py-2 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 rounded-lg font-bold hover:bg-emerald-500/30 transition-colors flex items-center gap-1.5"
+                    disabled={sendingWa}
+                    className="px-4 py-2 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 rounded-lg font-bold hover:bg-emerald-500/30 transition-colors flex items-center gap-1.5 disabled:opacity-50"
                   >
                     <Play className="w-3.5 h-3.5" />
-                    <span>Test Kirim WA</span>
+                    <span>{sendingWa ? 'Mengirim WA...' : 'Test Kirim WA'}</span>
                   </button>
                 </div>
               </div>

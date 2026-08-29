@@ -93,7 +93,14 @@ impl AlertDispatcher {
             );
 
             let client = self.client.clone();
+            let auth_header = if wa_token.starts_with("Bearer ") {
+                wa_token
+            } else {
+                format!("Bearer {}", wa_token)
+            };
+
             let wa_body = json!({
+                "phone": wa_target,
                 "target": wa_target,
                 "message": wa_msg
             });
@@ -101,7 +108,7 @@ impl AlertDispatcher {
             tokio::spawn(async move {
                 match client
                     .post(&wa_url)
-                    .header("Authorization", wa_token)
+                    .header("Authorization", auth_header)
                     .json(&wa_body)
                     .send()
                     .await
