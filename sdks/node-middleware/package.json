@@ -1,0 +1,20 @@
+{
+  "name": "@ctartech/ai-controlplane-middleware",
+  "version": "0.1.0",
+  "description": "Official Node.js & Express / LangChain Middleware for CTARTech-AIControlPlane",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": [
+    "ai-agent",
+    "security",
+    "control-plane",
+    "guardrails",
+    "zero-trust",
+    "ctartech"
+  ],
+  "author": "CTARTech Global",
+  "license": "AGPL-3.0"
+}

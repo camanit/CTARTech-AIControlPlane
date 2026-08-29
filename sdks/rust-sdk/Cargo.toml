@@ -1,0 +1,12 @@
+[package]
+name = "agentguard-sdk"
+version = "0.1.0"
+edition = "2021"
+description = "Official Rust SDK for CTARTech-AIControlPlane Runtime Security Gateway"
+
+[dependencies]
+reqwest = { version = "0.12", features = ["json"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+thiserror = "1.0"
+tokio = { version = "1.37", features = ["full"] }
