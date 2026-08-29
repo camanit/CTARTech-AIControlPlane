@@ -1,5 +1,0 @@
-{
-  "buildCommand": "cd dashboard-web && npm run build",
-  "outputDirectory": "dashboard-web/.next",
-  "framework": "nextjs"
-}
