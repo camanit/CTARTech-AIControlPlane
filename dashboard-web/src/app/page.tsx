@@ -17,7 +17,11 @@ import {
   ChevronRight,
   Send,
   Building2,
-  Users
+  Users,
+  DollarSign,
+  ShieldAlert,
+  Cpu,
+  MessageSquare
 } from 'lucide-react';
 
 export default function LandingPage() {
@@ -102,9 +106,6 @@ export default function LandingPage() {
           <Link href="/activation" className="hover:text-cyan-400 transition-colors flex items-center gap-1">
             <KeyRound className="w-3.5 h-3.5 text-cyan-400" />
             <span>Aktivasi Lisensi</span>
-          </Link>
-          <Link href="/superadmin" className="hover:text-amber-400 transition-colors">
-            Superadmin
           </Link>
         </nav>
 
@@ -217,6 +218,89 @@ export default function LandingPage() {
                 Guardrail hidup langsung di jalur eksekusi (*execution path*). Setiap transaksi dicek batas nominalnya, aksi destruktif dikunci, dan jika berisiko, notifikasi langsung ditembak ke WhatsApp &amp; Telegram CISO.
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section (Fitur Utama) */}
+      <section id="features" className="py-20 px-6 lg:px-12 max-w-6xl mx-auto space-y-12">
+        <div className="text-center space-y-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-xs font-mono">
+            <span>🛡️ 6 Pilar Runtime Security &amp; AI Governance</span>
+          </div>
+          <h2 className="text-3xl md:text-4xl font-extrabold text-white">
+            Fitur Utama CTARTech-AIControlPlane
+          </h2>
+          <p className="text-sm text-slate-400 max-w-2xl mx-auto leading-relaxed">
+            Perlindungan holistik untuk memastikan setiap agen AI otonom beroperasi dalam batasan wewenang yang aman, terukur, dan dapat dipertanggungjawabkan.
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-6">
+          {/* Card 1 */}
+          <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-cyan-500/40 glass-panel shadow-lg space-y-3 transition-all hover:translate-y-[-2px]">
+            <div className="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold">
+              <Bot className="w-5 h-5" />
+            </div>
+            <h3 className="font-bold text-white text-base">1. Central Identity &amp; Kill-Switch</h3>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              Inventarisasi lengkap seluruh agen AI (LangChain, CrewAI, AutoGen). Dilengkapi saklar darurat instan untuk mematikan wewenang agen dalam satu klik saat terjadi halusinasi.
+            </p>
+          </div>
+
+          {/* Card 2 */}
+          <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-cyan-500/40 glass-panel shadow-lg space-y-3 transition-all hover:translate-y-[-2px]">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
+              <DollarSign className="w-5 h-5" />
+            </div>
+            <h3 className="font-bold text-white text-base">2. Financial Limits Gate</h3>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              Plafon transaksi otomatis per agen. Mencegah pembengkakan anggaran atau transfer dana liar dengan otomatis menahan (HOLD) aksi bernilai di atas limit wewenang.
+            </p>
+          </div>
+
+          {/* Card 3 */}
+          <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-cyan-500/40 glass-panel shadow-lg space-y-3 transition-all hover:translate-y-[-2px]">
+            <div className="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center font-bold">
+              <ShieldAlert className="w-5 h-5" />
+            </div>
+            <h3 className="font-bold text-white text-base">3. Runtime Guardrails Firewall</h3>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              Intersepsi sub-milidetik terhadap perintah terminal destruktif (rm -rf, shell hijacking, drop database) sebelum dieksekusi ke infrastruktur server perusahaan.
+            </p>
+          </div>
+
+          {/* Card 4 */}
+          <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-cyan-500/40 glass-panel shadow-lg space-y-3 transition-all hover:translate-y-[-2px]">
+            <div className="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold">
+              <Cpu className="w-5 h-5" />
+            </div>
+            <h3 className="font-bold text-white text-base">4. Dynamic Policy Engine (OPA)</h3>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              Definisikan aturan tata kelola deklaratif secara instan via web (Hot-Reload). Atur jam operasional, blacklist rekening penipuan, dan blokir ekspor data sensitif tanpa recompile kode.
+            </p>
+          </div>
+
+          {/* Card 5 */}
+          <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-cyan-500/40 glass-panel shadow-lg space-y-3 transition-all hover:translate-y-[-2px]">
+            <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold">
+              <MessageSquare className="w-5 h-5" />
+            </div>
+            <h3 className="font-bold text-white text-base">5. WhatsApp &amp; Human-in-the-Loop</h3>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              Peringatan instan langsung ke nomor WhatsApp pimpinan/CISO via kaowhat.com saat agen AI membutuhkan persetujuan manual untuk mengeksekusi aksi berisiko tinggi.
+            </p>
+          </div>
+
+          {/* Card 6 */}
+          <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-cyan-500/40 glass-panel shadow-lg space-y-3 transition-all hover:translate-y-[-2px]">
+            <div className="w-10 h-10 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold">
+              <FileText className="w-5 h-5" />
+            </div>
+            <h3 className="font-bold text-white text-base">6. Multi-Language SDKs &amp; SOC2</h3>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              Dukungan pustaka klien resmi untuk Python, Node.js/Express, Go, dan Rust. Disertai modul cetak audit trail resmi ber-kop surat untuk audit kepatuhan SOC 2, ISO 27001, &amp; NIST.
+            </p>
           </div>
         </div>
       </section>
