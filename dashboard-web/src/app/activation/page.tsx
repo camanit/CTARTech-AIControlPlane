@@ -12,7 +12,10 @@ import {
   Copy, 
   Terminal,
   Activity,
-  ArrowRight
+  ArrowRight,
+  UploadCloud,
+  FileCheck,
+  FileText
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -22,13 +25,15 @@ export default function ActivationPage() {
   const [licenseData, setLicenseData] = useState<any>(null);
   const [errorMsg, setErrorMsg] = useState('');
   const [activated, setActivated] = useState(false);
+  const [uploadedFileName, setUploadedFileName] = useState('');
+  const [activeTab, setActiveTab] = useState<'upload' | 'manual'>('upload');
 
-  const handleVerifyAndActivate = () => {
+  const verifyToken = (tokenToVerify: string) => {
     setErrorMsg('');
     setVerifying(true);
     setLicenseData(null);
 
-    const token = tokenInput.trim();
+    const token = tokenToVerify.trim();
     if (!token.startsWith('ITCG-')) {
       setErrorMsg("Format lisensi salah. Token resmi CTARTech Guard harus diawali dengan 'ITCG-'.");
       setVerifying(false);
@@ -60,6 +65,31 @@ export default function ActivationPage() {
     }
   };
 
+  const handleVerifyAndActivate = () => {
+    verifyToken(tokenInput);
+  };
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadedFileName(file.name);
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const content = event.target?.result as string;
+      if (content) {
+        let token = content.trim();
+        try {
+          const parsed = JSON.parse(content);
+          if (parsed.token) token = parsed.token;
+          else if (parsed.license_key) token = parsed.license_key;
+        } catch (_) {}
+        setTokenInput(token);
+        verifyToken(token);
+      }
+    };
+    reader.readAsText(file);
+  };
+
   return (
     <div className="flex min-h-screen bg-slate-950 text-slate-100 font-sans">
       <Sidebar />
@@ -72,37 +102,90 @@ export default function ActivationPage() {
           </div>
           <h1 className="text-2xl font-extrabold text-white">Aktivasi Lisensi &amp; Otoritas Tenant</h1>
           <p className="text-xs text-slate-400 mt-1">
-            Masukkan token lisensi bertanda tangan Ed25519 yang diterbitkan oleh administrator offline ZentyCore.
+            Unggah file bundel sertifikat (.lic / .json) atau masukkan token kriptografis Ed25519 resmi Anda.
           </p>
+        </div>
+
+        {/* Tab Switcher */}
+        <div className="flex gap-2 p-1 bg-slate-900 rounded-xl border border-slate-800 text-xs font-semibold max-w-md mb-4">
+          <button
+            type="button"
+            onClick={() => setActiveTab('upload')}
+            className={`flex-1 py-2 rounded-lg transition-all flex items-center justify-center gap-2 ${
+              activeTab === 'upload'
+                ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/40 font-bold'
+                : 'text-slate-400 hover:text-white'
+            }`}
+          >
+            <UploadCloud className="w-3.5 h-3.5" />
+            <span>Unggah Bundel File (.lic)</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('manual')}
+            className={`flex-1 py-2 rounded-lg transition-all flex items-center justify-center gap-2 ${
+              activeTab === 'manual'
+                ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/40 font-bold'
+                : 'text-slate-400 hover:text-white'
+            }`}
+          >
+            <FileText className="w-3.5 h-3.5" />
+            <span>Input Token Manual</span>
+          </button>
         </div>
 
         {/* Input Card */}
         <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 glass-panel space-y-4 shadow-xl">
-          <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-2">
-              Kunci Lisensi Digital (Token ITCG)
-            </label>
-            <textarea
-              rows={4}
-              value={tokenInput}
-              onChange={(e) => setTokenInput(e.target.value)}
-              placeholder="ITCG-ENTERPRISE-eyJhbGciOiJFZDI1NTE5IiwidHlwIjoiSVRDRy1MSUMifQ..."
-              className="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs font-mono text-cyan-300 placeholder-slate-400 focus:outline-none focus:border-cyan-500"
-            />
-          </div>
+          {activeTab === 'upload' ? (
+            <div>
+              <label className="block text-xs font-semibold text-slate-300 mb-2">
+                File Bundel Sertifikat Klien (.lic / .json / .cert)
+              </label>
+              <label className="border-2 border-dashed border-slate-700 hover:border-cyan-500/80 rounded-2xl p-8 flex flex-col items-center justify-center cursor-pointer transition-all bg-slate-950/60 hover:bg-slate-950 group">
+                <UploadCloud className="w-10 h-10 text-cyan-400 mb-3 group-hover:scale-110 transition-transform" />
+                <span className="font-bold text-white text-sm">
+                  {uploadedFileName ? uploadedFileName : 'Klik atau Drag & Drop file sertifikat ke sini'}
+                </span>
+                <span className="text-[11px] text-slate-400 mt-1">
+                  Mendukung format bundel sertifikat kriptografi: <code className="text-cyan-400">*.lic</code>, <code className="text-cyan-400">*.json</code>, <code className="text-cyan-400">*.cert</code>
+                </span>
+                <input
+                  type="file"
+                  accept=".lic,.json,.cert,.txt"
+                  onChange={handleFileUpload}
+                  className="hidden"
+                />
+              </label>
+            </div>
+          ) : (
+            <div>
+              <label className="block text-xs font-semibold text-slate-300 mb-2">
+                Kunci Lisensi Digital (Token ITCG)
+              </label>
+              <textarea
+                rows={4}
+                value={tokenInput}
+                onChange={(e) => setTokenInput(e.target.value)}
+                placeholder="ITCG-ENTERPRISE-eyJhbGciOiJFZDI1NTE5IiwidHlwIjoiSVRDRy1MSUMifQ..."
+                className="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs font-mono text-cyan-300 placeholder-slate-400 focus:outline-none focus:border-cyan-500"
+              />
+            </div>
+          )}
 
           <div className="flex items-center justify-between pt-2">
             <span className="text-[11px] text-slate-400">
-              *Tanda tangan diverifikasi secara lokal di gateway tanpa mengirimkan rahasia ke luar.
+              *Tanda tangan kriptografis diverifikasi secara lokal di gateway tanpa mengirim data ke luar (Air-Gapped Ready).
             </span>
-            <button
-              onClick={handleVerifyAndActivate}
-              disabled={verifying || !tokenInput}
-              className="px-6 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs flex items-center gap-2 transition-all disabled:opacity-50 glow-cyan"
-            >
-              <ShieldCheck className="w-4 h-4" />
-              <span>{verifying ? 'Memvalidasi...' : 'Aktivasi Lisensi'}</span>
-            </button>
+            {activeTab === 'manual' && (
+              <button
+                onClick={handleVerifyAndActivate}
+                disabled={verifying || !tokenInput}
+                className="px-6 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs flex items-center gap-2 transition-all disabled:opacity-50 glow-cyan"
+              >
+                <ShieldCheck className="w-4 h-4" />
+                <span>{verifying ? 'Memvalidasi...' : 'Aktivasi Lisensi'}</span>
+              </button>
+            )}
           </div>
 
           {errorMsg && (

@@ -13,7 +13,8 @@ import {
   Building2,
   Lock,
   ArrowRight,
-  Copy
+  Copy,
+  Download
 } from 'lucide-react';
 import { TenantData } from '@/lib/api';
 
@@ -25,6 +26,30 @@ export default function SuperadminPage() {
   const [licenseResult, setLicenseResult] = useState<any>(null);
   const [copied, setCopied] = useState(false);
   const [invoiceOpen, setInvoiceOpen] = useState(false);
+
+  const handleDownloadLicenseFile = () => {
+    if (!licenseResult) return;
+    const fileContent = {
+      product: "CTARTech-AIControlPlane",
+      license_token: licenseResult.token,
+      organization: licenseResult.tenant,
+      tier: licenseResult.tier,
+      expires_at: licenseResult.expDate,
+      quota: licenseResult.quota,
+      issued_at: new Date().toISOString(),
+      signature_algorithm: "Ed25519"
+    };
+    const blob = new Blob([JSON.stringify(fileContent, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    const slug = (licenseResult.tenant || 'client').toLowerCase().replace(/[^a-z0-9]/g, '_');
+    a.download = `license_${slug}.lic`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
 
   // Activity Stream items matching Screenshot 2
   const activityLogs = [
@@ -178,13 +203,22 @@ export default function SuperadminPage() {
                 <div className="mt-4 p-4 rounded-xl bg-slate-950 border border-amber-500/30 text-xs font-mono space-y-2">
                   <div className="flex justify-between items-center">
                     <span className="text-amber-400 font-bold">TOKEN LISENSI RESMI:</span>
-                    <button
-                      onClick={handleCopy}
-                      className="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-400 hover:bg-cyan-500/30 text-[10px] flex items-center gap-1 font-sans"
-                    >
-                      <Copy className="w-3 h-3" />
-                      <span>{copied ? 'Tersalin!' : 'Salin Token'}</span>
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={handleCopy}
+                        className="px-2.5 py-1 rounded-lg bg-cyan-500/20 text-cyan-400 hover:bg-cyan-500/30 text-[10px] flex items-center gap-1 font-sans"
+                      >
+                        <Copy className="w-3 h-3" />
+                        <span>{copied ? 'Tersalin!' : 'Salin Token'}</span>
+                      </button>
+                      <button
+                        onClick={handleDownloadLicenseFile}
+                        className="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 text-[10px] flex items-center gap-1 font-sans font-bold border border-emerald-500/30"
+                      >
+                        <Download className="w-3 h-3" />
+                        <span>Download Bundel (.lic)</span>
+                      </button>
+                    </div>
                   </div>
                   <div className="text-slate-300 break-all text-[11px] bg-slate-900 p-2 rounded border border-slate-800">
                     {licenseResult.token}
