@@ -37,7 +37,7 @@ export default function LandingPage() {
       ],
       cta: 'Pilih Starter',
       badge: null,
-      payUrl: 'https://webpay.ctar.tech/?plan=starter&product=ai-control-plane',
+      payUrl: 'https://webpay.ctar.tech/?apiKey=wp_live_1VPaRKbaFcclNDGG6J5jTFygM3WdjkYc&plan=starter&amount=2500000',
     },
     {
       name: 'Professional',
@@ -55,7 +55,7 @@ export default function LandingPage() {
       ],
       cta: 'Pilih Professional',
       badge: 'POPULAR',
-      payUrl: 'https://webpay.ctar.tech/?plan=pro&product=ai-control-plane',
+      payUrl: 'https://webpay.ctar.tech/?apiKey=wp_live_1VPaRKbaFcclNDGG6J5jTFygM3WdjkYc&plan=pro&amount=7500000',
     },
     {
       name: 'Enterprise',
@@ -74,7 +74,7 @@ export default function LandingPage() {
       ],
       cta: 'Pilih Enterprise',
       badge: 'ENTERPRISE',
-      payUrl: 'https://webpay.ctar.tech/?plan=enterprise&product=ai-control-plane',
+      payUrl: 'https://webpay.ctar.tech/?apiKey=wp_live_1VPaRKbaFcclNDGG6J5jTFygM3WdjkYc&plan=enterprise&amount=18000000',
     },
   ];
 

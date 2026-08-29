@@ -217,8 +217,8 @@ export default function SuperadminPage() {
                     <span className="text-amber-400">⚡</span>
                     <span>CTARTech WebPay Portal</span>
                   </span>
-                  <span className="text-[10px] font-mono text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded border border-cyan-500/20">
-                    App: wp_live_catX...yruI
+                  <span className="text-[10px] font-mono text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded border border-cyan-500/20" title="Live WebPay API Key: wp_live_1VPaRKbaFcclNDGG6J5jTFygM3WdjkYc">
+                    App: wp_live_1VPa...jYc
                   </span>
                 </div>
 
@@ -239,7 +239,7 @@ export default function SuperadminPage() {
 
                 <div className="pt-2">
                   <a
-                    href="https://webpay.ctar.tech"
+                    href="https://webpay.ctar.tech/?apiKey=wp_live_1VPaRKbaFcclNDGG6J5jTFygM3WdjkYc"
                     target="_blank"
                     rel="noreferrer"
                     className="w-full py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-md"
