@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Sidebar from '@/components/Sidebar';
 import { 
   KeyRound, 
   ShieldCheck, 
@@ -91,18 +90,50 @@ export default function ActivationPage() {
   };
 
   return (
-    <div className="flex min-h-screen bg-slate-950 text-slate-100 font-sans">
-      <Sidebar />
+    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans flex flex-col">
+      {/* Top Header Navbar */}
+      <header className="h-16 border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md sticky top-0 z-50 flex items-center justify-between px-6 lg:px-12">
+        <div className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-xl bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 flex items-center justify-center font-bold text-lg glow-cyan">
+              🛡️
+            </div>
+            <div>
+              <div className="font-bold text-sm tracking-tight text-white flex items-center gap-1.5">
+                <span>CTARTech</span>
+                <span className="text-cyan-400 font-mono text-xs">AIControlPlane</span>
+              </div>
+              <div className="text-[10px] text-slate-400 font-mono">PORTAL AKTIVASI LISENSI RESMI</div>
+            </div>
+          </Link>
+        </div>
 
-      <main className="flex-1 p-8 max-w-4xl mx-auto overflow-y-auto">
-        <div className="mb-8">
-          <div className="flex items-center gap-2 text-xs font-mono text-cyan-400 uppercase tracking-wider mb-2">
-            <KeyRound className="w-4 h-4" />
-            <span>Kedaulatan Lisensi Kriptografis (Zero-Leakage)</span>
+        <div className="flex items-center gap-3 text-xs">
+          <Link
+            href="/"
+            className="text-slate-400 hover:text-white transition-colors px-3 py-1.5 rounded-lg border border-slate-800 hover:border-slate-700"
+          >
+            &larr; Beranda
+          </Link>
+          <Link
+            href="/login"
+            className="bg-cyan-500 text-slate-950 font-bold px-4 py-1.5 rounded-lg hover:bg-cyan-400 transition-colors flex items-center gap-1 glow-cyan"
+          >
+            <span>Masuk Dashboard</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+      </header>
+
+      <main className="flex-1 p-6 md:p-10 max-w-3xl mx-auto w-full space-y-6">
+        <div className="text-center space-y-2">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-xs font-mono">
+            <KeyRound className="w-3.5 h-3.5" />
+            <span>Kedaulatan Lisensi Kriptografis (Zero-Leakage &bull; Airgap Ready)</span>
           </div>
-          <h1 className="text-2xl font-extrabold text-white">Aktivasi Lisensi &amp; Otoritas Tenant</h1>
-          <p className="text-xs text-slate-400 mt-1">
-            Unggah file bundel sertifikat (.lic / .json) atau masukkan token kriptografis Ed25519 resmi Anda.
+          <h1 className="text-2xl md:text-3xl font-extrabold text-white">Aktivasi Lisensi &amp; Otoritas Tenant</h1>
+          <p className="text-xs text-slate-400 max-w-lg mx-auto">
+            Unggah file bundel sertifikat (.lic / .json) yang Anda terima dari administrator offline atau masukkan token Ed25519 Anda.
           </p>
         </div>
 
