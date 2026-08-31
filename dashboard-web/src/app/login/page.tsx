@@ -3,10 +3,13 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Lock, Mail, ArrowRight, Crown, Building2, AlertCircle, Eye, EyeOff } from 'lucide-react';
+import { Lock, Mail, ArrowRight, Crown, Building2, AlertCircle, Eye, EyeOff, Globe2 } from 'lucide-react';
+import { useLanguage } from '@/lib/LanguageContext';
 
 export default function LoginPage() {
   const router = useRouter();
+  const { lang, setLang } = useLanguage();
+
   const [role, setRole] = useState<'tenant' | 'superadmin'>('superadmin');
   const [email, setEmail] = useState('arahmand99@gmail.com');
   const [password, setPassword] = useState('');
@@ -20,7 +23,7 @@ export default function LoginPage() {
     if (newRole === 'superadmin') {
       setEmail('arahmand99@gmail.com');
     } else {
-      setEmail('ciso@perusahaan.com');
+      setEmail('ciso@enterprise.com');
     }
   };
 
@@ -33,7 +36,7 @@ export default function LoginPage() {
     const cleanPwd = password.trim();
 
     if (!cleanEmail || !cleanPwd) {
-      setErrorMsg('Silakan lengkapi alamat email dan kata sandi.');
+      setErrorMsg(lang === 'EN' ? 'Please provide both email address and password.' : 'Silakan lengkapi alamat email dan kata sandi.');
       setLoading(false);
       return;
     }
@@ -49,19 +52,19 @@ export default function LoginPage() {
 
     // Default accounts:
     // Superadmin: arahmand99@gmail.com -> admin / admin123
-    // Tenant: ciso@perusahaan.com -> admin123 / password123
+    // Tenant: ciso@perusahaan.com / ciso@enterprise.com -> admin123 / password123
     const isSuperadminMatch =
       cleanEmail === 'arahmand99@gmail.com' &&
       (cleanPwd === 'admin' || cleanPwd === 'admin123' || usersMap[cleanEmail] === cleanPwd);
 
     const isTenantMatch =
-      (cleanEmail === 'ciso@perusahaan.com' &&
+      ((cleanEmail === 'ciso@perusahaan.com' || cleanEmail === 'ciso@enterprise.com') &&
         (cleanPwd === 'admin123' || cleanPwd === 'password123' || usersMap[cleanEmail] === cleanPwd)) ||
       (usersMap[cleanEmail] && usersMap[cleanEmail] === cleanPwd);
 
     if (role === 'superadmin') {
       if (!isSuperadminMatch) {
-        setErrorMsg('Kata sandi Superadmin salah. Silakan periksa kembali.');
+        setErrorMsg(lang === 'EN' ? 'Invalid Superadmin credentials. Please verify password.' : 'Kata sandi Superadmin salah. Silakan periksa kembali.');
         setLoading(false);
         return;
       }
@@ -76,7 +79,7 @@ export default function LoginPage() {
       router.push('/superadmin');
     } else {
       if (!isTenantMatch) {
-        setErrorMsg('Email atau kata sandi Tenant salah. Silakan periksa kembali.');
+        setErrorMsg(lang === 'EN' ? 'Invalid Tenant credentials. Please verify email and password.' : 'Email atau kata sandi Tenant salah. Silakan periksa kembali.');
         setLoading(false);
         return;
       }
@@ -94,6 +97,30 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-center items-center p-6 relative font-sans">
+      {/* Top Right Language Switcher */}
+      <div className="absolute top-6 right-6 flex items-center bg-slate-900 border border-slate-800 rounded-xl p-1 text-xs">
+        <button
+          onClick={() => setLang('EN')}
+          className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
+            lang === 'EN' 
+              ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20' 
+              : 'text-slate-400 hover:text-white'
+          }`}
+        >
+          EN (Default)
+        </button>
+        <button
+          onClick={() => setLang('ID')}
+          className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
+            lang === 'ID' 
+              ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20' 
+              : 'text-slate-400 hover:text-white'
+          }`}
+        >
+          ID (Lokal)
+        </button>
+      </div>
+
       <div className="w-full max-w-md space-y-6">
         {/* Brand */}
         <div className="text-center space-y-2">
@@ -101,7 +128,9 @@ export default function LoginPage() {
             🛡️
           </div>
           <h1 className="text-xl font-bold text-white tracking-tight">CTARTech-AIControlPlane</h1>
-          <p className="text-xs text-slate-400">Zero-Trust Identity &amp; Runtime Security Portal</p>
+          <p className="text-xs text-slate-400">
+            {lang === 'EN' ? 'Zero-Trust Identity & Runtime Security Portal' : 'Portal Keamanan Identitas & Runtime Zero-Trust'}
+          </p>
         </div>
 
         {/* Card */}
@@ -143,7 +172,9 @@ export default function LoginPage() {
 
           <form onSubmit={handleLogin} className="space-y-4 text-xs">
             <div>
-              <label className="block text-slate-400 mb-1 font-medium">Alamat Email</label>
+              <label className="block text-slate-400 mb-1 font-medium">
+                {lang === 'EN' ? 'Email Address' : 'Alamat Email'}
+              </label>
               <div className="relative">
                 <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
@@ -151,7 +182,7 @@ export default function LoginPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@perusahaan.com"
+                  placeholder="admin@enterprise.com"
                   className="w-full bg-slate-950 border border-slate-700 rounded-xl pl-9 pr-3 py-2.5 text-white font-mono placeholder-slate-400 focus:outline-none focus:border-cyan-500"
                 />
               </div>
@@ -159,12 +190,14 @@ export default function LoginPage() {
 
             <div>
               <div className="flex items-center justify-between mb-1">
-                <label className="block text-slate-400 font-medium">Kata Sandi</label>
+                <label className="text-slate-400 font-medium">
+                  {lang === 'EN' ? 'Password' : 'Kata Sandi'}
+                </label>
                 <Link
                   href="/forgot-password"
-                  className="text-[11px] text-cyan-400 hover:underline transition-colors"
+                  className="text-[11px] text-cyan-400 hover:underline"
                 >
-                  Lupa kata sandi?
+                  {lang === 'EN' ? 'Forgot password?' : 'Lupa kata sandi?'}
                 </Link>
               </div>
               <div className="relative">
@@ -174,14 +207,13 @@ export default function LoginPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Masukkan kata sandi akun"
-                  className="w-full bg-slate-950 border border-slate-700 rounded-xl pl-9 pr-10 py-2.5 text-white font-mono placeholder-slate-500 focus:outline-none focus:border-cyan-500"
+                  placeholder={lang === 'EN' ? 'Enter account password' : 'Masukkan kata sandi akun'}
+                  className="w-full bg-slate-950 border border-slate-700 rounded-xl pl-9 pr-10 py-2.5 text-white font-mono placeholder-slate-400 focus:outline-none focus:border-cyan-500"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
-                  tabIndex={-1}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -191,32 +223,43 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className={`w-full py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-lg ${
+              className={`w-full py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2 ${
                 role === 'superadmin'
-                  ? 'bg-amber-500 text-slate-950 hover:bg-amber-400'
-                  : 'bg-cyan-500 text-slate-950 hover:bg-cyan-400 glow-cyan'
+                  ? 'bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-lg shadow-amber-500/20'
+                  : 'bg-cyan-500 hover:bg-cyan-400 text-slate-950 glow-cyan'
               }`}
             >
-              <span>{loading ? 'Memverifikasi...' : `Masuk sebagai ${role === 'superadmin' ? 'Superadmin' : 'Tenant Admin'}`}</span>
-              <ArrowRight className="w-4 h-4" />
+              {loading ? (
+                <span>{lang === 'EN' ? 'Authenticating...' : 'Memverifikasi...'}</span>
+              ) : (
+                <>
+                  <span>
+                    {role === 'superadmin' 
+                      ? (lang === 'EN' ? 'Sign In as Superadmin' : 'Masuk sebagai Superadmin')
+                      : (lang === 'EN' ? 'Sign In as Tenant Admin' : 'Masuk sebagai Tenant Admin')}
+                  </span>
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
             </button>
           </form>
 
-          <div className="pt-2 text-center text-xs text-slate-400 border-t border-slate-800">
-            Belum memiliki akun?{' '}
-            <Link href="/register" className="text-cyan-400 font-semibold hover:underline">
-              Daftar Baru
-            </Link>{' '}
-            atau{' '}
-            <Link href="/activation" className="text-cyan-400 font-semibold hover:underline">
-              Aktivasi Lisensi
+          <div className="border-t border-slate-800 pt-4 text-center text-slate-400 text-xs">
+            {lang === 'EN' ? "Don't have an account? " : 'Belum memiliki akun? '}
+            <Link href="/register" className="text-cyan-400 hover:underline font-semibold">
+              {lang === 'EN' ? 'Register New' : 'Daftar Baru'}
+            </Link>
+            {' '}{lang === 'EN' ? 'or ' : 'atau '}
+            <Link href="/activation" className="text-cyan-400 hover:underline font-semibold">
+              {lang === 'EN' ? 'Activate License' : 'Aktivasi Lisensi'}
             </Link>
           </div>
         </div>
 
+        {/* Back Link */}
         <div className="text-center">
-          <Link href="/" className="text-xs text-slate-400 hover:text-white">
-            &larr; Kembali ke Beranda Landing Page
+          <Link href="/" className="text-xs text-slate-400 hover:text-white transition-colors">
+            &larr; {lang === 'EN' ? 'Back to Landing Page' : 'Kembali ke Beranda Landing Page'}
           </Link>
         </div>
       </div>

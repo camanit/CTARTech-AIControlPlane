@@ -4,9 +4,12 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Mail, Lock, CheckCircle2, AlertCircle, ArrowRight, KeyRound, ShieldCheck } from 'lucide-react';
+import { useLanguage } from '@/lib/LanguageContext';
 
 export default function ForgotPasswordPage() {
   const router = useRouter();
+  const { lang, setLang } = useLanguage();
+
   const [email, setEmail] = useState('');
   const [step, setStep] = useState<'request' | 'reset' | 'success'>('request');
   const [newPassword, setNewPassword] = useState('');
@@ -17,7 +20,7 @@ export default function ForgotPasswordPage() {
     e.preventDefault();
     setErrorMsg('');
     if (!email) {
-      setErrorMsg('Masukkan alamat email yang terdaftar.');
+      setErrorMsg(lang === 'EN' ? 'Please enter your registered email address.' : 'Masukkan alamat email yang terdaftar.');
       return;
     }
     // Advance to reset password
@@ -29,11 +32,11 @@ export default function ForgotPasswordPage() {
     setErrorMsg('');
 
     if (newPassword.length < 6) {
-      setErrorMsg('Kata sandi baru minimal 6 karakter.');
+      setErrorMsg(lang === 'EN' ? 'New password must be at least 6 characters.' : 'Kata sandi baru minimal 6 karakter.');
       return;
     }
     if (newPassword !== confirmPassword) {
-      setErrorMsg('Konfirmasi kata sandi tidak cocok.');
+      setErrorMsg(lang === 'EN' ? 'Passwords do not match.' : 'Konfirmasi kata sandi tidak cocok.');
       return;
     }
 
@@ -50,14 +53,44 @@ export default function ForgotPasswordPage() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-center items-center p-6 relative font-sans">
+      {/* Top Right Language Switcher */}
+      <div className="absolute top-6 right-6 flex items-center bg-slate-900 border border-slate-800 rounded-xl p-1 text-xs">
+        <button
+          onClick={() => setLang('EN')}
+          className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
+            lang === 'EN' 
+              ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20' 
+              : 'text-slate-400 hover:text-white'
+          }`}
+        >
+          EN
+        </button>
+        <button
+          onClick={() => setLang('ID')}
+          className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
+            lang === 'ID' 
+              ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20' 
+              : 'text-slate-400 hover:text-white'
+          }`}
+        >
+          ID
+        </button>
+      </div>
+
       <div className="w-full max-w-md space-y-6">
         {/* Brand Header */}
         <div className="text-center space-y-2">
           <div className="w-12 h-12 rounded-2xl bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 flex items-center justify-center font-bold text-2xl mx-auto glow-cyan">
             🛡️
           </div>
-          <h1 className="text-xl font-bold text-white tracking-tight">Pemulihan Kata Sandi</h1>
-          <p className="text-xs text-slate-400">Atur ulang kata sandi akun CTARTech-AIControlPlane Anda</p>
+          <h1 className="text-xl font-bold text-white tracking-tight">
+            {lang === 'EN' ? 'Account Password Recovery' : 'Pemulihan Kata Sandi'}
+          </h1>
+          <p className="text-xs text-slate-400">
+            {lang === 'EN' 
+              ? 'Reset credentials for your CTARTech-AIControlPlane account' 
+              : 'Atur ulang kata sandi akun CTARTech-AIControlPlane Anda'}
+          </p>
         </div>
 
         {/* Card */}
@@ -72,11 +105,15 @@ export default function ForgotPasswordPage() {
           {step === 'request' && (
             <form onSubmit={handleRequestReset} className="space-y-4 text-xs">
               <p className="text-slate-400 text-xs leading-relaxed">
-                Masukkan alamat email yang terdaftar pada akun Tenant atau Superadmin Anda untuk memverifikasi dan mereset kata sandi.
+                {lang === 'EN' 
+                  ? 'Enter the email address registered with your Tenant or Superadmin account to verify and reset your password.' 
+                  : 'Masukkan alamat email yang terdaftar pada akun Tenant atau Superadmin Anda untuk memverifikasi dan mereset kata sandi.'}
               </p>
 
               <div>
-                <label className="block text-slate-400 mb-1 font-medium">Alamat Email Terdaftar</label>
+                <label className="block text-slate-400 mb-1 font-medium">
+                  {lang === 'EN' ? 'Registered Email Address' : 'Alamat Email Terdaftar'}
+                </label>
                 <div className="relative">
                   <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
@@ -84,7 +121,7 @@ export default function ForgotPasswordPage() {
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="nama@perusahaan.com"
+                    placeholder="user@enterprise.com"
                     className="w-full bg-slate-950 border border-slate-700 rounded-xl pl-9 pr-3 py-2.5 text-white font-mono placeholder-slate-400 focus:outline-none focus:border-cyan-500"
                   />
                 </div>
@@ -94,7 +131,7 @@ export default function ForgotPasswordPage() {
                 type="submit"
                 className="w-full py-3 rounded-xl font-bold text-xs bg-cyan-500 text-slate-950 hover:bg-cyan-400 glow-cyan flex items-center justify-center gap-2 transition-all shadow-lg"
               >
-                <span>Lanjutkan Reset Kata Sandi</span>
+                <span>{lang === 'EN' ? 'Continue Password Reset' : 'Lanjutkan Reset Kata Sandi'}</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </form>
@@ -102,12 +139,15 @@ export default function ForgotPasswordPage() {
 
           {step === 'reset' && (
             <form onSubmit={handleResetPassword} className="space-y-4 text-xs">
-              <div className="p-3 rounded-lg bg-slate-950 border border-slate-800 text-[11px] font-mono text-cyan-400">
-                Email Terverifikasi: <strong>{email}</strong>
+              <div className="p-3 bg-cyan-500/10 border border-cyan-500/30 rounded-xl text-cyan-300 text-xs">
+                {lang === 'EN' ? 'Resetting password for: ' : 'Mereset kata sandi untuk akun: '}
+                <strong className="font-mono text-white">{email}</strong>
               </div>
 
               <div>
-                <label className="block text-slate-400 mb-1 font-medium">Kata Sandi Baru</label>
+                <label className="block text-slate-400 mb-1 font-medium">
+                  {lang === 'EN' ? 'New Password' : 'Kata Sandi Baru'}
+                </label>
                 <div className="relative">
                   <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
@@ -115,14 +155,16 @@ export default function ForgotPasswordPage() {
                     required
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
-                    placeholder="Minimal 6 karakter"
+                    placeholder={lang === 'EN' ? 'Minimum 6 characters' : 'Minimal 6 karakter'}
                     className="w-full bg-slate-950 border border-slate-700 rounded-xl pl-9 pr-3 py-2.5 text-white font-mono placeholder-slate-400 focus:outline-none focus:border-cyan-500"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-slate-400 mb-1 font-medium">Konfirmasi Kata Sandi Baru</label>
+                <label className="block text-slate-400 mb-1 font-medium">
+                  {lang === 'EN' ? 'Confirm New Password' : 'Konfirmasi Kata Sandi Baru'}
+                </label>
                 <div className="relative">
                   <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
@@ -130,7 +172,7 @@ export default function ForgotPasswordPage() {
                     required
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="Ulangi kata sandi baru"
+                    placeholder={lang === 'EN' ? 'Re-enter new password' : 'Ketik ulang kata sandi baru'}
                     className="w-full bg-slate-950 border border-slate-700 rounded-xl pl-9 pr-3 py-2.5 text-white font-mono placeholder-slate-400 focus:outline-none focus:border-cyan-500"
                   />
                 </div>
@@ -138,43 +180,41 @@ export default function ForgotPasswordPage() {
 
               <button
                 type="submit"
-                className="w-full py-3 rounded-xl font-bold text-xs bg-emerald-500 text-slate-950 hover:bg-emerald-400 flex items-center justify-center gap-2 transition-all shadow-lg"
+                className="w-full py-3 rounded-xl font-bold text-xs bg-cyan-500 text-slate-950 hover:bg-cyan-400 glow-cyan flex items-center justify-center gap-2 transition-all shadow-lg"
               >
-                <span>Simpan Kata Sandi Baru</span>
+                <span>{lang === 'EN' ? 'Save New Password' : 'Simpan Kata Sandi Baru'}</span>
                 <CheckCircle2 className="w-4 h-4" />
               </button>
             </form>
           )}
 
           {step === 'success' && (
-            <div className="space-y-4 text-center">
-              <div className="w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center justify-center mx-auto">
+            <div className="text-center space-y-4 py-4 text-xs">
+              <div className="w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center mx-auto">
                 <CheckCircle2 className="w-6 h-6" />
               </div>
-              <h3 className="text-sm font-bold text-white">Kata Sandi Berhasil Diperbarui!</h3>
-              <p className="text-xs text-slate-400">
-                Silakan masuk kembali menggunakan email dan kata sandi baru Anda.
+              <h3 className="text-sm font-bold text-white">
+                {lang === 'EN' ? 'Password Reset Successfully!' : 'Kata Sandi Berhasil Diperbarui!'}
+              </h3>
+              <p className="text-slate-400 leading-relaxed">
+                {lang === 'EN'
+                  ? 'Your account password has been updated. You can now sign in with your new credentials.'
+                  : 'Kata sandi akun Anda telah berhasil diatur ulang. Anda sekarang dapat masuk menggunakan kata sandi baru.'}
               </p>
               <Link
                 href="/login"
-                className="inline-flex items-center justify-center w-full py-3 rounded-xl font-bold text-xs bg-cyan-500 text-slate-950 hover:bg-cyan-400 glow-cyan transition-all"
+                className="inline-flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold transition-all shadow-lg glow-cyan"
               >
-                <span>Kembali ke Halaman Masuk</span>
+                <span>{lang === 'EN' ? 'Proceed to Sign In' : 'Kembali ke Halaman Masuk'}</span>
+                <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
           )}
-
-          <div className="pt-2 text-center text-xs text-slate-400 border-t border-slate-800">
-            Ingat kata sandi?{' '}
-            <Link href="/login" className="text-cyan-400 font-semibold hover:underline">
-              Masuk disini
-            </Link>
-          </div>
         </div>
 
         <div className="text-center">
-          <Link href="/" className="text-xs text-slate-400 hover:text-white">
-            &larr; Kembali ke Beranda Landing Page
+          <Link href="/login" className="text-xs text-slate-400 hover:text-white transition-colors">
+            &larr; {lang === 'EN' ? 'Back to Sign In' : 'Kembali ke Halaman Masuk'}
           </Link>
         </div>
       </div>

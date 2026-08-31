@@ -23,10 +23,13 @@ import {
   Clock,
   Workflow
 } from 'lucide-react';
+import { useLanguage } from '@/lib/LanguageContext';
 
 export default function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
+  const { lang, setLang } = useLanguage();
+
   const [currentUser, setCurrentUser] = useState<any>({
     email: 'arahmand99@gmail.com',
     role: 'Superadmin / SecOps Lead'
@@ -46,7 +49,7 @@ export default function Sidebar() {
   }, [pathname]);
 
   const handleLogout = () => {
-    if (confirm('Apakah Anda yakin ingin keluar dari sesi portal?')) {
+    if (confirm(lang === 'EN' ? 'Are you sure you want to sign out from the portal session?' : 'Apakah Anda yakin ingin keluar dari sesi portal?')) {
       try {
         localStorage.removeItem('itcg_auth_user');
         sessionStorage.clear();
@@ -55,27 +58,94 @@ export default function Sidebar() {
     }
   };
 
-  // 1-to-1 unique route mapping for AI Control Plane Pillars
+  // 1-to-1 unique route mapping for AI Control Plane Pillars (Bilingual EN / ID)
   const coreModules = [
-    { name: '1. Visibility & SOC Overview', path: '/dashboard', icon: Activity },
-    { name: '2. Agent Identity & Registry', path: '/agents', icon: UserCheck },
-    { name: '3. Financial Limits Gate', path: '/limits', icon: DollarSign },
-    { name: '4. Runtime Guardrails Interceptor', path: '/guardrails', icon: ShieldAlert },
-    { name: '5. Dynamic Policy Engine (OPA)', path: '/policies', icon: Cpu },
-    { name: '6. Human-in-the-Loop Queue', path: '/approvals', icon: Zap },
-    { name: '7. Governance Matrix & Reports', path: '/reports', icon: FileCheck2 },
-    { name: '8. Kepatuhan ISO & Privasi', path: '/compliance', icon: ShieldCheck },
-    { name: '9. AI-ITDR Threat Sentry', path: '/itdr', icon: Radio },
-    { name: '10. Edge WAF & OSI Defense', path: '/waf', icon: Flame },
-    { name: '11. Honeytokens Canary', path: '/honeytokens', icon: Sparkles },
-    { name: '12. JIT Access & Rotation', path: '/jit-access', icon: Clock },
-    { name: '13. Incident Playbooks', path: '/playbooks', icon: Workflow },
+    { 
+      name: lang === 'EN' ? '1. Visibility & SOC Overview' : '1. Overview & Pemantauan SOC', 
+      path: '/dashboard', 
+      icon: Activity 
+    },
+    { 
+      name: lang === 'EN' ? '2. Agent Identity & Registry' : '2. Registri Identitas Agen', 
+      path: '/agents', 
+      icon: UserCheck 
+    },
+    { 
+      name: lang === 'EN' ? '3. Financial Limits Gate' : '3. Plafon Limit Finansial', 
+      path: '/limits', 
+      icon: DollarSign 
+    },
+    { 
+      name: lang === 'EN' ? '4. Runtime Guardrails Interceptor' : '4. Guardrail Pencegah Perintah', 
+      path: '/guardrails', 
+      icon: ShieldAlert 
+    },
+    { 
+      name: lang === 'EN' ? '5. Dynamic Policy Engine (OPA)' : '5. Mesin Kebijakan Dinamis (OPA)', 
+      path: '/policies', 
+      icon: Cpu 
+    },
+    { 
+      name: lang === 'EN' ? '6. Human-in-the-Loop Queue' : '6. Antrean Persetujuan Manusia', 
+      path: '/approvals', 
+      icon: Zap 
+    },
+    { 
+      name: lang === 'EN' ? '7. Governance Matrix & Reports' : '7. Matriks Laporan & Audit', 
+      path: '/reports', 
+      icon: FileCheck2 
+    },
+    { 
+      name: lang === 'EN' ? '8. ISO Compliance & Data Privacy' : '8. Kepatuhan ISO & Privasi Data', 
+      path: '/compliance', 
+      icon: ShieldCheck 
+    },
+    { 
+      name: lang === 'EN' ? '9. AI-ITDR Threat Sentry' : '9. AI-ITDR Sentry Ancaman', 
+      path: '/itdr', 
+      icon: Radio 
+    },
+    { 
+      name: lang === 'EN' ? '10. Edge WAF & OSI Defense' : '10. Edge WAF & Pertahanan OSI', 
+      path: '/waf', 
+      icon: Flame 
+    },
+    { 
+      name: lang === 'EN' ? '11. Honeytokens Canary Trap' : '11. Honeytokens Jebakan Canary', 
+      path: '/honeytokens', 
+      icon: Sparkles 
+    },
+    { 
+      name: lang === 'EN' ? '12. JIT Access & Rotation' : '12. JIT Token & Rotasi Kunci', 
+      path: '/jit-access', 
+      icon: Clock 
+    },
+    { 
+      name: lang === 'EN' ? '13. Incident Playbooks' : '13. Playbook Mitigasi Otomatis', 
+      path: '/playbooks', 
+      icon: Workflow 
+    },
   ];
 
   const operationsModules = [
-    { name: 'Gateway Notifikasi', path: '/notifications', icon: Send, badge: 'GATEWAY' },
-    { name: 'Profil & Ubah Password', path: '/profile', icon: User, badge: 'MY_ID' },
-    { name: 'Superadmin & License', path: '/superadmin', icon: KeyRound, badge: 'PRO' },
+    { 
+      name: lang === 'EN' ? 'Notification Gateway' : 'Gateway Notifikasi', 
+      path: '/notifications', 
+      icon: Send, 
+      badge: 'GATEWAY' 
+    },
+    { 
+      name: lang === 'EN' ? 'Profile & Security' : 'Profil & Keamanan', 
+      path: '/profile', 
+      icon: User, 
+      badge: 'MY_ID' 
+    },
+    { 
+      name: lang === 'EN' ? 'Superadmin & License' : 'Superadmin & Lisensi', 
+      path: '/superadmin', 
+      icon: KeyRound, 
+      badge: 'PRO' 
+    },
   ];
 
   return (
@@ -98,7 +168,7 @@ export default function Sidebar() {
       {currentUser && (
         <Link 
           href="/profile" 
-          title="Buka Pengaturan Profil & Keamanan"
+          title={lang === 'EN' ? 'Open Profile & Security Settings' : 'Buka Pengaturan Profil & Keamanan'}
           className="mb-5 p-2.5 bg-slate-950/70 hover:bg-slate-800/80 border border-slate-800 rounded-xl flex items-center justify-between transition-all group"
         >
           <div className="flex items-center gap-2 truncate">
@@ -115,7 +185,7 @@ export default function Sidebar() {
               e.preventDefault();
               handleLogout();
             }}
-            title="Keluar / Logout"
+            title={lang === 'EN' ? 'Sign Out / Logout' : 'Keluar / Logout'}
             className="p-1 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
           >
             <LogOut className="w-3.5 h-3.5" />
@@ -123,9 +193,32 @@ export default function Sidebar() {
         </Link>
       )}
 
+      {/* Language Switcher Bar in Sidebar */}
+      <div className="mb-4 p-1.5 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-between text-xs">
+        <span className="text-[10px] font-mono text-slate-400 font-bold px-1.5">LANGUAGE</span>
+        <div className="flex items-center gap-1">
+          <button
+            onClick={() => setLang('EN')}
+            className={`px-2 py-0.5 rounded-md text-[10px] font-bold transition-all ${
+              lang === 'EN' ? 'bg-cyan-500 text-slate-950 font-black' : 'text-slate-400 hover:text-white'
+            }`}
+          >
+            EN
+          </button>
+          <button
+            onClick={() => setLang('ID')}
+            className={`px-2 py-0.5 rounded-md text-[10px] font-bold transition-all ${
+              lang === 'ID' ? 'bg-cyan-500 text-slate-950 font-black' : 'text-slate-400 hover:text-white'
+            }`}
+          >
+            ID
+          </button>
+        </div>
+      </div>
+
       {/* Core AI Control Plane Pillars */}
       <div className="mb-2 px-3 text-[11px] font-bold tracking-wider text-slate-400 uppercase">
-        AI Control Plane Pillars
+        {lang === 'EN' ? 'AI Control Plane Pillars' : 'Pilar Kontrol Agen AI'}
       </div>
       <nav className="space-y-1 flex-1 overflow-y-auto pr-1">
         {coreModules.map((mod, idx) => {
@@ -149,7 +242,7 @@ export default function Sidebar() {
 
         {/* Intelligence & Operations Section */}
         <div className="mt-4 mb-2 px-3 text-[11px] font-bold tracking-wider text-slate-400 uppercase">
-          AI &amp; Operations
+          {lang === 'EN' ? 'Operations & Management' : 'Operasional & Manajemen'}
         </div>
         {operationsModules.map((mod, idx) => {
           const Icon = mod.icon;
@@ -190,7 +283,7 @@ export default function Sidebar() {
         >
           <span className="flex items-center gap-2">
             <KeyRound className="w-3.5 h-3.5" />
-            <span>Aktivasi Lisensi</span>
+            <span>{lang === 'EN' ? 'License Activation' : 'Aktivasi Lisensi'}</span>
           </span>
           <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/30 text-amber-200">LOCAL</span>
         </Link>
