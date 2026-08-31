@@ -74,6 +74,43 @@ CREATE TABLE IF NOT EXISTS notification_configs (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
+-- 6. Table: Private Vector & AI Data Bank Vault (Encrypted & Isolated)
+CREATE TABLE IF NOT EXISTS ai_data_banks (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    tenant_id VARCHAR(100) NOT NULL DEFAULT 'default',
+    collection_name VARCHAR(100) NOT NULL,
+    document_hash VARCHAR(128) NOT NULL,
+    encrypted_payload TEXT NOT NULL, -- AES-256 GCM Encrypted Context
+    embedding_dimension INT DEFAULT 1536,
+    pii_redacted BOOLEAN NOT NULL DEFAULT true,
+    retention_days INT NOT NULL DEFAULT 90,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 7. Table: ITDR Behavioral Anomaly & Threat Logs
+CREATE TABLE IF NOT EXISTS itdr_anomaly_logs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    agent_id VARCHAR(100) NOT NULL,
+    anomaly_score INT NOT NULL,
+    threat_type VARCHAR(100) NOT NULL,
+    velocity_qps INT NOT NULL,
+    off_hours_flag BOOLEAN NOT NULL DEFAULT false,
+    mitigation_action VARCHAR(50) NOT NULL DEFAULT 'AUTO_QUARANTINE',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 8. Table: Deception & Honeytokens Registry
+CREATE TABLE IF NOT EXISTS honeytokens (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    tenant_id VARCHAR(100) NOT NULL DEFAULT 'default',
+    token_key VARCHAR(255) UNIQUE NOT NULL,
+    canary_type VARCHAR(50) NOT NULL DEFAULT 'API_KEY', -- API_KEY, DB_MOCK_ROW, ENDPOINT
+    status VARCHAR(50) NOT NULL DEFAULT 'ARMED', -- ARMED, TRIGGERED, REVOKED
+    triggered_by_agent_id VARCHAR(100),
+    triggered_at TIMESTAMP WITH TIME ZONE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Seed Initial Default Agent
 INSERT INTO agents (agent_id, name, owner, task_description, max_limit, status)
 VALUES (

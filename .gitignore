@@ -15,10 +15,13 @@ master_authority.key
 # 1B. Internal Planning & Confidential Blueprints (DO NOT PUSH TO GIT)
 roadmap.md
 *roadmap*
-ITCowboy Guard (AI Agent Control Plane).txt
-*ITcowboy*
-*itcowboy*
+*.txt
 *.txt.bak
+ITCowboy Guard (AI Agent Control Plane).txt
+FITUR TAMBAHAN CTRATECH-ZENTYCORE.txt
+1. Arsitektur Inti & Modul Aplikasi.txt
+Desain Arsitektur Sistem CTARTech-Elastis.txt
+Omaas.txt
 
 # 2. Environment Variables & Secrets
 .env

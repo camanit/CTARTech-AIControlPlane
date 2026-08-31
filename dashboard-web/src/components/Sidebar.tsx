@@ -16,7 +16,12 @@ import {
   Globe,
   DollarSign,
   ShieldAlert,
-  Cpu
+  Cpu,
+  Radio,
+  Flame,
+  Sparkles,
+  Clock,
+  Workflow
 } from 'lucide-react';
 
 export default function Sidebar() {
@@ -59,6 +64,12 @@ export default function Sidebar() {
     { name: '5. Dynamic Policy Engine (OPA)', path: '/policies', icon: Cpu },
     { name: '6. Human-in-the-Loop Queue', path: '/approvals', icon: Zap },
     { name: '7. Governance Matrix & Reports', path: '/reports', icon: FileCheck2 },
+    { name: '8. Kepatuhan ISO & Privasi', path: '/compliance', icon: ShieldCheck },
+    { name: '9. AI-ITDR Threat Sentry', path: '/itdr', icon: Radio },
+    { name: '10. Edge WAF & OSI Defense', path: '/waf', icon: Flame },
+    { name: '11. Honeytokens Canary', path: '/honeytokens', icon: Sparkles },
+    { name: '12. JIT Access & Rotation', path: '/jit-access', icon: Clock },
+    { name: '13. Incident Playbooks', path: '/playbooks', icon: Workflow },
   ];
 
   const operationsModules = [
@@ -186,10 +197,15 @@ export default function Sidebar() {
         <div className="flex justify-between items-center px-1 text-[10px] text-slate-500">
           <Link href="/" className="hover:text-cyan-400 flex items-center gap-1">
             <Globe className="w-3 h-3" />
-            <span>Landing Page</span>
+            <span>Landing</span>
           </Link>
+          <div className="flex items-center gap-2">
+            <Link href="/terms" className="hover:text-cyan-400">Terms</Link>
+            <span>&bull;</span>
+            <Link href="/privacy" className="hover:text-cyan-400">Privacy</Link>
+          </div>
           <button onClick={handleLogout} className="hover:text-rose-400">
-            Switch Account
+            Logout
           </button>
         </div>
       </div>
